@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tlkpop">
+  <select id="list" resultType="tlkpop.dto.Tl_KpopDTO">
+    select * from tlkpop
+	order by num desc
+  </select>
+  
+  <insert id="insert">
+    insert into tlkpop
+    (num,subject,passwd,content,filename,filesize) 
+    values
+   (seq_tlkpop.nextval,#{subject},#{passwd}
+   ,#{content},#{filename},#{filesize})
+  </insert>
+  
+	
+	<select id="getFileName" resultType="String">
+     select filename
+		from tlkpop
+		where num=#{num}
+    </select>
+  
+  <select id="view" resultType="tlkpop.dto.Tl_KpopDTO">
+		select * from tlkpop
+		where num=#{num}
+  </select>
+  
+  <update id="plusReadCount">
+      update tlkpop set readcount=readcount+1 
+      where num=#{num}
+  </update>
+  
+  <select id="commentList" resultType="tlkpop.dto.Tl_KpopCommentDTO">
+      select * from tlkpop_comment
+		where tlkpop_num=#{num}
+  </select>
+  
+  <insert id="commentAdd">
+    insert into tlkpop_comment
+	(comment_num,tlkpop_num,writer,content) values
+	((select nvl(max(comment_num)+1,1) from tlkpop_comment)
+	, #{tlkpop_num}, #{writer}, #{content})
+  </insert>
+  
+  <select id="pass_check" resultType="String">
+    select passwd from tlkpop
+	where num=#{num} and passwd=#{passwd}
+  </select>
+  
+	<update id="update">
+		update tlkpop
+		set subject=#{subject}
+		, content=#{content}, filename=#{filename}
+		, filesize=#{filesize}
+		where num=#{num}
+	</update>
+	
+	<delete id="delete">
+	    delete from tlkpop
+	    where num=#{num}
+	</delete>
+  
+  
+  
+
+  
+</mapper>
+
+  

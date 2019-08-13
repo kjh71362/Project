@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>jsp02</display-name>
+  <session-config>
+    <session-timeout>15</session-timeout>
+  </session-config>
+  <servlet>
+    <servlet-name>board</servlet-name>
+    <servlet-class>board.BoardController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>board</servlet-name>
+    <url-pattern>/board_servlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>tlboard</servlet-name>
+    <servlet-class>tlboard.Tl_BoardController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>tlboard</servlet-name>
+    <url-pattern>/tlboard_servlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>tlkpop</servlet-name>
+    <servlet-class>tlkpop.Tl_KpopController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>tlkpop</servlet-name>
+    <url-pattern>/tlkpop_servlet/*</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

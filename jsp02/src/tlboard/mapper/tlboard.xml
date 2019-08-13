@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tlboard">
+  <select id="list" resultType="tlboard.dto.Tl_BoardDTO">
+    select num,writer,subject,reg_date,readcount
+	,filename,filesize,down,re_level
+	,(select count(*) from tlboard_comment 
+	where tlboard_num=num) comment_count, show
+	from tlboard
+	order by ref desc, re_step
+  </select>
+  
+  <insert id="insert">
+    insert into tlboard
+(num,writer,subject,passwd,ref,re_step,re_level,content,ip,filename,filesize) 
+values
+( (select nvl(max(num)+1,1) from tlboard)
+  ,#{writer},#{subject},#{passwd}
+  ,(select nvl(max(num)+1,1) from tlboard)
+  ,1,0,#{content},#{ip},#{filename}, #{filesize})
+  </insert>
+  
+  <select id="getFileName" resultType="String">
+     select filename
+		from tlboard
+		where num=#{num}
+  </select>
+  
+  <update id="plusDown">
+    update tlboard set down=down+1 where num=#{num}
+  </update>
+
+  <select id="view" resultType="tlboard.dto.Tl_BoardDTO">
+		select * from tlboard
+		where num=#{num}
+  </select>
+  
+  <update id="plusReadCount">
+      update tlboard set readcount=readcount+1 
+      where num=#{num}
+  </update>
+  
+  <select id="commentList" resultType="tlboard.dto.Tl_BoardCommentDTO">
+      select * from tlboard_comment
+		where tlboard_num=#{num}
+  </select>
+  
+  <insert id="commentAdd">
+    insert into tlboard_comment
+	(comment_num,tlboard_num,writer,content) values
+	((select nvl(max(comment_num)+1,1) from tlboard_comment)
+	, #{tlboard_num}, #{writer}, #{content})
+  </insert>
+  
+  <update id="updateStep">
+     update tlboard 
+     set re_step=re_step+1
+     where ref=#{ref} and re_step >= #{re_step}
+  </update>
+  
+  <insert id="reply">
+     insert into tlboard
+	(num,writer,subject,passwd,ref,re_step,re_level,
+	content,ip,filename,filesize) 
+	values
+	( (select nvl(max(num)+1,1) from tlboard)
+  	,#{writer},#{subject},#{passwd}
+  	,#{ref}, #{re_step}, #{re_level}
+ 	,#{content},#{ip},#{filename}, #{filesize})
+  </insert>
+  
+  <select id="pass_check" resultType="String">
+    select passwd from tlboard
+	where num=#{num} and passwd=#{passwd}
+  </select>
+  
+	<update id="update">
+		update tlboard
+		set writer=#{writer}, subject=#{subject}
+			, content=#{content}, filename=#{filename}
+			, filesize=#{filesize}, down=#{down}
+		where num=#{num}
+	</update>
+	
+	<update id="delete">
+	    update tlboard set show='n'
+	    where num=#{num}
+	</update>
+
+  
+</mapper>
+
+  
